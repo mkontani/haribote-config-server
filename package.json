@@ -1,0 +1,23 @@
+{
+  "name": "haribote-config-server",
+  "version": "1.0.0",
+  "description": "Simple configurable multi process web server.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkontani/haribote-config-server.git"
+  },
+  "keywords": [
+    "haribote",
+    "server"
+  ],
+  "author": "mkontani",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mkontani/haribote-config-server/issues"
+  },
+  "homepage": "https://github.com/mkontani/haribote-config-server#readme"
+}
