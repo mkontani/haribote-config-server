@@ -10,6 +10,12 @@ You can easily up multi server processes by just only editting configfile.
 
 ## Usage
 
+You can run docker image like below.
+
+```
+$ docker run --rm -p 9997:9997 -p 9998:9998 -p 9999:9999 mkontani/haribote-config-server
+```
+
 To start server from this repo, run the following commands.
 
 ```:bash
@@ -66,3 +72,30 @@ You can customize by overwrite config `settings.json`.
 |**statusCode**| response statusCode (default is `200`) |
 |**resMessage**| response message (default is `requestHeaders`) |
 
+You can specify Json Array format.
+Default example config is like following.
+
+```
+[
+    {
+        "name": "sample1",
+        "port": 9997,
+        "statusCode": 200
+    },
+    {
+        "name": "sample2",
+        "port": 9998,
+        "resMessage": "Hello world",
+        "statusCode": 503 
+    },
+    {
+        "name": "sample3-tls",
+        "port": 9999,
+        "tls": {
+            "key": "certs/server.key",
+            "cert": "certs/server.crt"
+        },
+        "statusCode": 200
+    }
+]
+```
