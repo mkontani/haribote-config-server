@@ -71,6 +71,8 @@ You can customize by overwrite config `settings.json`.
 |**port**| server listening port (mandatory) |
 |**statusCode**| response statusCode (default is `200`) |
 |**resMessage**| response message (default is `requestHeaders`) |
+|**tls.key**| tls keyfile path (Only needed for https) |
+|**tls.cert**| tls certfile path (Only needed for https) |
 
 You can specify Json Array format.
 Default example config is like following.
