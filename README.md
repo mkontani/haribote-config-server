@@ -1,4 +1,6 @@
 # haribote-config-server
+![Docker](https://github.com/mkontani/haribote-config-server/workflows/Docker/badge.svg)
+
 
 🏢 Simple configurable multi process web server.
 
