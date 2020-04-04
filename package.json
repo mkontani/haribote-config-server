@@ -1,10 +1,14 @@
 {
   "name": "haribote-config-server",
-  "version": "1.0.0",
-  "description": "Simple configurable multi process web server.",
+  "version": "2.0.0",
+  "description": "Simple configurable multi process web server without dependencies.",
   "main": "server.js",
   "scripts": {
+    "start": "node app.js",
     "lint": "eslint --debug ."
+  },
+  "bin": {
+    "haribote-config-server": "./app.js"
   },
   "repository": {
     "type": "git",
@@ -17,7 +21,8 @@
   "author": "mkontani",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mkontani/haribote-config-server/issues"
+    "url": "https://github.com/mkontani/haribote-config-server/issues",
+    "email": "itoama@live.jp"
   },
   "homepage": "https://github.com/mkontani/haribote-config-server#readme",
   "devDependencies": {
