@@ -8,9 +8,14 @@ You can easily up multi server processes by just only editting configfile.
 
 - [haribote-config-server](#haribote-config-server)
   - [Usage](#usage)
+    - [Use as Container](#use-as-container)
+    - [Use as NPM module](#use-as-npm-module)
+    - [Use as exec binary](#use-as-exec-binary)
   - [Configuration](#configuration)
 
 ## Usage
+
+### Use as Container
 
 You can run docker image like below.
 
@@ -65,7 +70,44 @@ request headers info is returned same as port 9997.
 
 You can customize by overwrite config `settings.json`.
 
+### Use as NPM module
+
+You can use as npm module like below.
+
+```
+// import module
+const serverUP = require('haribote-config-server')
+
+// get configfile
+const config = require('<your config path>')
+
+// up server process
+serverUP(config)
+```
+
+### Use as exec binary
+
+You can exec as binary like below.
+
+```
+// install binary module
+$ npm install -g haribote-config-server
+
+// up server process with configfile
+$ haribote-config-server ./config.json
+```
+
 ## Configuration
+
+You can set config file path by setting file on default position (`$PWD/settings.json`) or env var (`HARIBOTE_CONF`) or commandline arg.
+
+The priority is following
+
+1. ARGV
+2. ENV (`HARIBOTE_CONF`)
+3. default file position (`$PWD/settings.json` [`/app/settings.json` (if container env)])
+
+The Config properties detail is following.
 
 |property|desc|
 |:--:|:--|
