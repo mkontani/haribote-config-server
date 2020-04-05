@@ -1,6 +1,7 @@
 # haribote-config-server
-![Docker](https://github.com/mkontani/haribote-config-server/workflows/Docker/badge.svg)
-
+[![Docker](https://github.com/mkontani/haribote-config-server/workflows/Docker/badge.svg)](https://github.com/mkontani/haribote-config-server/actions?query=workflow%3ADocker)
+[![npm](https://img.shields.io/npm/v/haribote-config-server)](https://www.npmjs.com/package/haribote-config-server)
+[![GitHub](https://img.shields.io/github/license/mkontani/haribote-config-server)](https://github.com/mkontani/haribote-config-server/blob/master/LICENSE)
 
 🏢 Simple configurable multi process web server.
 
@@ -17,7 +18,7 @@ You can easily up multi server processes by just only editting configfile.
 
 ### Use as Container
 
-You can run docker image like below.
+You can run [docker image](https://hub.docker.com/r/mkontani/haribote-config-server) like below.
 
 ```
 $ docker run --rm -p 9997:9997 -p 9998:9998 -p 9999:9999 mkontani/haribote-config-server
@@ -93,8 +94,15 @@ You can exec as binary like below.
 // install binary module
 $ npm install -g haribote-config-server
 
+// or local install
+$ npm install haribote-config-server
+
+
 // up server process with configfile
-$ haribote-config-server ./config.json
+$ haribote-config-server $PWD/config.json
+
+// or local exec
+$ ./node_modules/.bin/haribote-config-server $PWD/config.json
 ```
 
 ## Configuration
