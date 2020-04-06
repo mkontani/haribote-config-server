@@ -9,8 +9,8 @@ if (process.argv.length === 3 && fs.existsSync(process.argv[2])) config = requir
 else config = fs.existsSync(process.env.HARIBOTE_CONF) ? require(process.env.HARIBOTE_CONF) : require('./settings.json')
 
 if (!config) {
-    console.log('config file is not defined.')
-    process.exit(1)
+  console.log('config file is not defined.')
+  process.exit(1)
 }
 
 hariboteUp(config)
