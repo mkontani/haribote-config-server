@@ -1,10 +1,11 @@
 # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
 
-name: Node.js Package
+name: NPM Release Management
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -17,8 +18,31 @@ jobs:
       - run: npm ci
       - run: npm run lint
 
+  update_draft_release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      # Drafts your next Release notes as Pull Requests are merged into "master"
+      - uses: toolmantim/release-drafter@v5.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish_draft_release_on_version_bump:
+    needs: [update_draft_release]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      # Checks for a version bump to publish an existing Draft Release
+      - id: github_release
+        uses: JamesMGreene/node-draft-releaser@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo "Released at $RELEASE_URL"
+        env:
+          RELEASE_URL: ${{ steps.github_release.outputs.release_url }}
+
   publish-npm:
-    needs: build
+    needs: [publish_draft_release_on_version_bump]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
