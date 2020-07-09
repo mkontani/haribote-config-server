@@ -31,7 +31,7 @@ To start server from this repo, run the following commands.
 $ docker build -t haribote .
 
 # run the haribote server
-$ docker run -p 9997:9997 -p 9998:9998 -p 9999:9999 -p 10000:10000 -v $PWD/settings.json:/app/settings.json:ro  haribote
+$ docker run -p 9997:9997 -p 9998:9998 -p 9999:9999 -v $PWD/settings.json:/app/settings.json:ro  haribote
 
 > haribote-config-server@1.0.0 start /app
 > node server.js
@@ -99,35 +99,35 @@ $ npm install haribote-config-server
 
 
 // up server process with configfile
-$ haribote-config-server $PWD/config.json
+$ haribote-config-server ./config.json
 
 // or local exec
-$ ./node_modules/.bin/haribote-config-server $PWD/config.json
+$ ./node_modules/.bin/haribote-config-server ./config.json
 ```
 
 ## Configuration
 
-You can set config file path by setting file on default position (`$PWD/settings.json`) or env var (`HARIBOTE_CONF`) or commandline arg.
+You can set config file path by setting file on default position (`${__dirname}/settings.json`) or env var (`HARIBOTE_CONF`) or commandline arg.
 
-The priority is following
+The priority is following order
 
 1. ARGV
 2. ENV (`HARIBOTE_CONF`)
-3. default file position (`$PWD/settings.json` [`/app/settings.json` (if container env)])
+3. default file position (`${__dirname}/settings.json` [`/app/settings.json` (if container env)])
 
 The Config properties detail is following.
 
-|property|desc|
-|:--:|:--|
-|**name**| server app name (default is `haribote-server`) |
-|**port**| server listening port (mandatory) |
-|**statusCode**| response statusCode (default is `200`) |
-|**resMessage**| response message (default is `requestHeaders`) |
-|**tls.key**| tls keyfile path (Only needed for https) |
-|**tls.cert**| tls certfile path (Only needed for https) |
+|    property    | desc                                           |
+| :------------: | :--------------------------------------------- |
+|    **name**    | server app name (default is `haribote-server`) |
+|    **port**    | server listening port (mandatory)              |
+| **statusCode** | response statusCode (default is `200`)         |
+| **resMessage** | response message (default is `requestHeaders`) |
+|  **tls.key**   | tls keyfile path (Only needed for https)       |
+|  **tls.cert**  | tls certfile path (Only needed for https)      |
 
 You can specify Json Array format.
-Default example config is like following.
+Default example config is below.
 
 ```
 [
