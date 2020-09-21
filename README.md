@@ -4,7 +4,8 @@
 [![GitHub](https://img.shields.io/github/license/mkontani/haribote-config-server)](https://github.com/mkontani/haribote-config-server/blob/master/LICENSE)
 
 🏢 Simple configurable multi process web server.
-For each server, you can set routing by request method and path.
+
+For each server, all you do is defining request routing and corresponding to response.
 
 You can easily up multi server processes by just only editing configfile.
 
@@ -42,32 +43,25 @@ HTTP Server sample2 is listening on PORT 9998
 HTTPS Server sample3-tls is listening on PORT 9999
 ```
 
-By default config, 3 server processes up like above output.
+By Using [default config](./settings.json), 3 server processes up like above output.
 
-Using Defualt config, when access to `http://<server>:9997`, 
+When access to `http://<server>:9997` (`GET`), 
 request headers info is returned like below.
 
 ```
+ᐅ curl -X 'GET' http://localhost:9997       
 {
-    "host": "localhost:9997",
-    "connection": "keep-alive",
-    "upgrade-insecure-requests": "1",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.158 Safari/537.36",
-    "sec-fetch-dest": "document",
-    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-    "sec-fetch-site": "none",
-    "sec-fetch-mode": "navigate",
-    "sec-fetch-user": "?1",
-    "accept-encoding": "gzip, deflate, br",
-    "accept-language": "ja,en-US;q=0.9,en;q=0.8",
-    "haribote_name": "sample1"
+  "host": "localhost:9997",
+  "user-agent": "curl/7.58.0",
+  "accept": "*/*",
+  "haribote_name": "sample1"
 }
 ```
 
-when access to `http://<server>:9998`, 
-a message `Hello world` is returned.
+When `POST` request to `http://<server>:9998/foo`, 
+a message `success` is returned which `content-type` is `plain/text`.
 
-when access to ssl `https://<server>:9999`, 
+When access to ssl `https://<server>:9999`, 
 request headers info is returned same as port 9997.
 
 You can customize by overwrite config `settings.json`.
@@ -108,7 +102,7 @@ $ ./node_modules/.bin/haribote-config-server ./config.json
 
 ## Configuration
 
-You can set config file path by setting file on default position (`${__dirname}/settings.json`) or env var (`HARIBOTE_CONF`) or commandline arg.
+You can set config file path by setting file on default position (`${__dirname}/settings.json`) or env var (`HARIBOTE_CONF`) or command-line arg.
 
 The priority is following order
 
@@ -118,32 +112,32 @@ The priority is following order
 
 The Config properties detail is following.
 
-|           property           | desc                                                                                                                                           |
-| :--------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------- |
-|           **name**           | server app name (default is `haribote-server`)                                                                                                 |
-|           **port**           | server listening port (mandatory)                                                                                                              |
-|         **mappings**         | set request and response conditions                                                                                                            |
-|       **mappings.req**       | request condition (If mappings defined, this is mandatory.)                                                                                    |
-|   **mappings.req.method**    | request method condition (e.g. "GET", "POST", "PUT",...). If `req.path` is not defined, this is mandatory.                                     |
-|    **mappings.req.path**     | request url pathname (e.g. "/foo"). If `req.method` is not defined, this is mandatory.                                                         |
-|       **mappings.res**       | response condition (If mappings defined, this is mandatory.)                                                                                   |
+| property                     | desc                                                                                                                                           |
+| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
+| **name**                     | server app name (default is `haribote-server`)                                                                                                 |
+| **port**                     | server listening port (mandatory)                                                                                                              |
+| **mappings**                 | set request and response conditions                                                                                                            |
+| **mappings.req**             | request condition (If mappings defined, this is mandatory.)                                                                                    |
+| **mappings.req.method**      | request method condition (e.g. "GET", "POST", "PUT",...). If `req.path` is not defined, this is mandatory.                                     |
+| **mappings.req.path**        | request url pathname (e.g. "/foo"). If `req.method` is not defined, this is mandatory.                                                         |
+| **mappings.res**             | response condition (If mappings defined, this is mandatory.)                                                                                   |
 | **mappings.res.statusCode**  | response HTTP status code (If mappings is not defined, default is `200`, otherwise `404`). If request condition matched, this code is applied. |
 | **mappings.res.contentType** | response HTTP `Content-Type` (default is `plain/text`). If request condition matched, this Content-Type is applied.                            |
-|    **mappings.res.body**     | responses body (default is request header). If request condition matched, this body is applied.                                                |
-|         **tls.key**          | tls keyfile path (Only needed for https)                                                                                                       |
-|         **tls.cert**         | tls certfile path (Only needed for https)                                                                                                      |
+| **mappings.res.body**        | responses body (default is request header). If request condition matched, this body is applied.                                                |
+| **tls.key**                  | tls keyfile path (Only needed for https)                                                                                                       |
+| **tls.cert**                 | tls certfile path (Only needed for https)                                                                                                      |
 
-You can specify Json Array format.
+You can specify JSON Array format.
 Default example config is below.
 
 ```
 [
   {
-    "name": "sample1",
+    "name": "minimal setting."
     "port": 9997
   },
   {
-    "name": "sample2",
+    "name": "various routing examples."
     "port": 9998,
     "mappings": [
       {
@@ -184,7 +178,7 @@ Default example config is below.
     ]
   },
   {
-    "name": "sample3-tls",
+    "name": "TLS example",
     "port": 9999,
     "tls": {
       "key": "certs/server.key",
