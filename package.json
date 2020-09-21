@@ -1,6 +1,6 @@
 {
   "name": "haribote-config-server",
-  "version": "2.0.5",
+  "version": "3.0.0",
   "description": "Simple configurable multi process web server without dependencies.",
   "main": "server.js",
   "scripts": {
