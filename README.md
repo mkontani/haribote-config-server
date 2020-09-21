@@ -4,8 +4,9 @@
 [![GitHub](https://img.shields.io/github/license/mkontani/haribote-config-server)](https://github.com/mkontani/haribote-config-server/blob/master/LICENSE)
 
 🏢 Simple configurable multi process web server.
+For each server, you can set routing by request method and path.
 
-You can easily up multi server processes by just only editting configfile.
+You can easily up multi server processes by just only editing configfile.
 
 - [haribote-config-server](#haribote-config-server)
   - [Usage](#usage)
@@ -117,39 +118,78 @@ The priority is following order
 
 The Config properties detail is following.
 
-|    property    | desc                                           |
-| :------------: | :--------------------------------------------- |
-|    **name**    | server app name (default is `haribote-server`) |
-|    **port**    | server listening port (mandatory)              |
-| **statusCode** | response statusCode (default is `200`)         |
-| **resMessage** | response message (default is `requestHeaders`) |
-|  **tls.key**   | tls keyfile path (Only needed for https)       |
-|  **tls.cert**  | tls certfile path (Only needed for https)      |
+|           property           | desc                                                                                                                                           |
+| :--------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------- |
+|           **name**           | server app name (default is `haribote-server`)                                                                                                 |
+|           **port**           | server listening port (mandatory)                                                                                                              |
+|         **mappings**         | set request and response conditions                                                                                                            |
+|       **mappings.req**       | request condition (If mappings defined, this is mandatory.)                                                                                    |
+|   **mappings.req.method**    | request method condition (e.g. "GET", "POST", "PUT",...). If `req.path` is not defined, this is mandatory.                                     |
+|    **mappings.req.path**     | request url pathname (e.g. "/foo"). If `req.method` is not defined, this is mandatory.                                                         |
+|       **mappings.res**       | response condition (If mappings defined, this is mandatory.)                                                                                   |
+| **mappings.res.statusCode**  | response HTTP status code (If mappings is not defined, default is `200`, otherwise `404`). If request condition matched, this code is applied. |
+| **mappings.res.contentType** | response HTTP `Content-Type` (default is `plain/text`). If request condition matched, this Content-Type is applied.                            |
+|    **mappings.res.body**     | responses body (default is request header). If request condition matched, this body is applied.                                                |
+|         **tls.key**          | tls keyfile path (Only needed for https)                                                                                                       |
+|         **tls.cert**         | tls certfile path (Only needed for https)                                                                                                      |
 
 You can specify Json Array format.
 Default example config is below.
 
 ```
 [
-    {
-        "name": "sample1",
-        "port": 9997,
-        "statusCode": 200
-    },
-    {
-        "name": "sample2",
-        "port": 9998,
-        "resMessage": "Hello world",
-        "statusCode": 503 
-    },
-    {
-        "name": "sample3-tls",
-        "port": 9999,
-        "tls": {
-            "key": "certs/server.key",
-            "cert": "certs/server.crt"
+  {
+    "name": "sample1",
+    "port": 9997
+  },
+  {
+    "name": "sample2",
+    "port": 9998,
+    "mappings": [
+      {
+        "req": {
+          "method": "POST",
+          "path": "/foo"
         },
-        "statusCode": 200
+        "res": {
+          "statusCode": 201,
+          "contentType": "plain/text",
+          "body": "success"
+        }
+      },
+      {
+        "req": {
+          "path": "/bar"
+        },
+        "res": {
+          "statusCode": 202,
+          "contentType": "application/json",
+          "body": {
+            "response": "/bar accessed."
+          }
+        }
+      },
+      {
+        "req": {
+          "method": "GET"
+        },
+        "res": {
+          "statusCode": 200,
+          "contentType": "application/json",
+          "body": {
+            "result": "OK"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "sample3-tls",
+    "port": 9999,
+    "tls": {
+      "key": "certs/server.key",
+      "cert": "certs/server.crt"
     }
+  }
 ]
 ```

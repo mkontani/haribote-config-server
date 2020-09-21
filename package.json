@@ -17,7 +17,9 @@
   },
   "keywords": [
     "haribote",
-    "server"
+    "server",
+    "mock",
+    "stub"
   ],
   "author": "mkontani",
   "license": "MIT",
