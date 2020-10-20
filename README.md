@@ -3,11 +3,11 @@
 [![npm](https://img.shields.io/npm/v/haribote-config-server)](https://www.npmjs.com/package/haribote-config-server)
 [![GitHub](https://img.shields.io/github/license/mkontani/haribote-config-server)](https://github.com/mkontani/haribote-config-server/blob/master/LICENSE)
 
-🏢 Simple configurable multi process web server.
+🏢 Simple light configurable multi process web server without dependencies.
 
-For each server, all you do is defining request routing and corresponding to response.
+For each server, all you do is defining request routing and corresponding to response like [default example](./settings.json).
 
-You can easily up multi server processes by just only editing configfile.
+You can easily up multi server processes by just editing config file.
 
 - [haribote-config-server](#haribote-config-server)
   - [Usage](#usage)
@@ -35,17 +35,17 @@ $ docker build -t haribote .
 # run the haribote server
 $ docker run -p 9997:9997 -p 9998:9998 -p 9999:9999 -v $PWD/settings.json:/app/settings.json:ro  haribote
 
-> haribote-config-server@1.0.0 start /app
-> node server.js
+> haribote-config-server@3.0.1 start /app
+> node app.js
 
-HTTP Server sample1 is listening on PORT 9997
-HTTP Server sample2 is listening on PORT 9998
-HTTPS Server sample3-tls is listening on PORT 9999
+HTTP Server minimal setting example is listening on PORT 9997
+HTTP Server various routing example is listening on PORT 9998
+HTTPS Server TLS example is listening on PORT 9999
 ```
 
 By Using [default config](./settings.json), 3 server processes up like above output.
 
-When access to `http://<server>:9997` (`GET`), 
+When access to `http://<server>:9997` (`GET`) which is not configured, 
 request headers info is returned like below.
 
 ```
@@ -59,7 +59,20 @@ request headers info is returned like below.
 ```
 
 When `POST` request to `http://<server>:9998/foo`, 
-a message `success` is returned which `content-type` is `plain/text`.
+a message `success` is returned which `content-type` is `text/plain`.
+
+```
+ᐅ curl -X 'POST' http://localhost:9998/foo
+"success"
+```
+
+When  request to `http://<server>:9998/bar` with any method, 
+a json response is returned which `content-type` is `application/json`.
+
+```
+ᐅ curl -X 'PUT' http://localhost:9998/bar
+{"response":"/bar accessed."}
+```
 
 When access to ssl `https://<server>:9999`, 
 request headers info is returned same as port 9997.
@@ -70,6 +83,7 @@ You can customize by overwrite config `settings.json`.
 
 You can use as npm module like below.
 
+With config file case:
 ```
 // import module
 const serverUP = require('haribote-config-server')
@@ -77,8 +91,17 @@ const serverUP = require('haribote-config-server')
 // get configfile
 const config = require('<your config path>')
 
-// up server process
+// up server process with configfile
 serverUP(config)
+```
+
+Directly set config object case:
+```
+// import module
+const serverUP = require('haribote-config-server')
+
+// up server process with config object
+serverUP([{name: "sample-server", port: 9999}])
 ```
 
 ### Use as exec binary
@@ -122,10 +145,11 @@ The Config properties detail is following.
 | **mappings.req.path**        | request url pathname (e.g. "/foo"). If `req.method` is not defined, this is mandatory.                                                         |
 | **mappings.res**             | response condition (If mappings defined, this is mandatory.)                                                                                   |
 | **mappings.res.statusCode**  | response HTTP status code (If mappings is not defined, default is `200`, otherwise `404`). If request condition matched, this code is applied. |
-| **mappings.res.contentType** | response HTTP `Content-Type` (default is `plain/text`). If request condition matched, this Content-Type is applied.                            |
+| **mappings.res.contentType** | response HTTP `Content-Type` (default is `text/plain`). If request condition matched, this Content-Type is applied.                            |
 | **mappings.res.body**        | responses body (default is request header). If request condition matched, this body is applied.                                                |
-| **tls.key**                  | tls keyfile path (Only needed for https)                                                                                                       |
-| **tls.cert**                 | tls certfile path (Only needed for https)                                                                                                      |
+| **tls**                      | tls settings (Only needed for https)                                                                                                           |
+| **tls.key**                  | tls keyfile path                                                                                                                               |
+| **tls.cert**                 | tls certfile path                                                                                                                              |
 
 You can specify JSON Array format.
 Default example config is below.
@@ -133,11 +157,11 @@ Default example config is below.
 ```
 [
   {
-    "name": "minimal setting."
+    "name": "minimal setting example"
     "port": 9997
   },
   {
-    "name": "various routing examples."
+    "name": "various routing example"
     "port": 9998,
     "mappings": [
       {
@@ -147,7 +171,7 @@ Default example config is below.
         },
         "res": {
           "statusCode": 201,
-          "contentType": "plain/text",
+          "contentType": "text/plain",
           "body": "success"
         }
       },

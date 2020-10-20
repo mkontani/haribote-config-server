@@ -62,7 +62,7 @@ const apply = (req, res, c) => {
       }
     })
     if (resContentType || resStatusCode || resBody) {
-      res.setHeader('content-type', resContentType || 'plain/text')
+      res.setHeader('content-type', resContentType || 'text/plain')
       res.statusCode = resStatusCode || 200
       res.end(JSON.stringify(resBody) || resBody)
       return
