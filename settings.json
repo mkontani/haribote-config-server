@@ -1,10 +1,10 @@
 [
   {
-    "name": "sample1",
+    "name": "minimal setting example",
     "port": 9997
   },
   {
-    "name": "sample2",
+    "name": "various routing example",
     "port": 9998,
     "mappings": [
       {
@@ -14,7 +14,7 @@
         },
         "res": {
           "statusCode": 201,
-          "contentType": "plain/text",
+          "contentType": "text/plain",
           "body": "success"
         }
       },
@@ -23,7 +23,7 @@
           "path": "/bar"
         },
         "res": {
-          "statusCode": 202,
+          "statusCode": 200,
           "contentType": "application/json",
           "body": {
             "response": "/bar accessed."
@@ -32,10 +32,10 @@
       },
       {
         "req": {
-          "method": "GET"
+          "method": "OPTIONS"
         },
         "res": {
-          "statusCode": 200,
+          "statusCode": 204,
           "contentType": "application/json",
           "body": {
             "result": "OK"
@@ -45,7 +45,7 @@
     ]
   },
   {
-    "name": "sample3-tls",
+    "name": "TLS example",
     "port": 9999,
     "tls": {
       "key": "certs/server.key",
