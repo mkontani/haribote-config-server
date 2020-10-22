@@ -52,19 +52,19 @@ const apply = (req, res, c) => {
     // check mappings
     let resContentType, resStatusCode, resBody
     let priority = -1
-    c.mappings.forEach(m => {
+    c.mappings.some(m => {
       // method and path matched
-      if ((m.req.path === url.pathname &&
-        m.req.method && m.req.method.toUpperCase() === req.method) ||
+      if ((isPathMatch(m.req.path, url.pathname) && isMethodMatch(m.req.method, req.method)) ||
         // path matched and method undefined
-        (!m.req.method && m.req.path === url.pathname) ||
+        (!m.req.method && isPathMatch(m.req.path, url.pathname)) ||
         // method matched and path undefined
-        (m.req.method && m.req.method.toUpperCase() === req.method && !m.req.path)) {
+        (isMethodMatch(m.req.method, req.method) && !m.req.path)) {
         if (!m.priority || m.priority > priority) {
-          priority = m.priority
           resContentType = m.res.contentType
           resStatusCode = m.res.statusCode
           resBody = m.res.body
+          if (!m.priority) return true
+          else priority = m.priority
         }
       }
     })
@@ -79,6 +79,17 @@ const apply = (req, res, c) => {
   res.statusCode = defaultStatusCode
   res.setHeader('content-type', defaultContentType)
   res.end(defaultResBody)
+}
+
+const isPathMatch = (m, r) => {
+  if (!m) return false // path undefined
+  if (m.indexOf('*') === -1) return m === r // if wildcard not used, exactly match
+  return r.startsWith(m.split('*')[0]) // simple prefix match
+}
+
+const isMethodMatch = (m, r) => {
+  if (!m) return false // method undefined
+  return m === '*' || m.toUpperCase() === r
 }
 
 module.exports = Up
