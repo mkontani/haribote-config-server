@@ -24,6 +24,7 @@
         }
       },
       {
+        "priority": 2,
         "req": {
           "path": "/bar"
         },
@@ -33,6 +34,18 @@
           "body": {
             "response": "/bar accessed."
           }
+        }
+      },
+      {
+        "priority": 1,
+        "req": {
+          "method": "PUT",
+          "path": "/bar"
+        },
+        "res": {
+          "statusCode": 200,
+          "contentType": "application/json",
+          "body": "PUT /bar requested."
         }
       },
       {
