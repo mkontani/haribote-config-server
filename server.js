@@ -36,14 +36,17 @@ const Up = (config) => {
 const apply = (req, res, c) => {
   // default settings
   req.headers.haribote_name = c.name || 'haribote-server'
-  const resBody = JSON.stringify(req.headers, null, 2)
+  const defaultStatusCode = c.defaultStatusCode || 200
+  const defaultContentType = c.defaultContentType || 'text/plain'
+  const defaultResBody = JSON.stringify(c.defaultResBody) || c.defaultResBody || JSON.stringify(req.headers)
 
   const url = new URL(req.url, `${req.protocol}://${req.headers.host}`)
 
   // undefined mapping
   if (!c.mappings) {
-    res.statusCode = 200
-    res.end(resBody)
+    res.statusCode = defaultStatusCode
+    res.setHeader('content-type', defaultContentType)
+    res.end(defaultResBody)
     return
   } else {
     // check mappings
@@ -62,15 +65,16 @@ const apply = (req, res, c) => {
       }
     })
     if (resContentType || resStatusCode || resBody) {
-      res.setHeader('content-type', resContentType || 'text/plain')
-      res.statusCode = resStatusCode || 200
-      res.end(JSON.stringify(resBody) || resBody)
+      res.setHeader('content-type', resContentType || defaultContentType)
+      res.statusCode = resStatusCode || defaultStatusCode
+      res.end(JSON.stringify(resBody) || defaultResBody)
       return
     }
   }
   // has mapping, but undefined case
-  res.statusCode = 404
-  res.end(resBody)
+  res.statusCode = defaultStatusCode
+  res.setHeader('content-type', defaultContentType)
+  res.end(defaultResBody)
 }
 
 module.exports = Up
