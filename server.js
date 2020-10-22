@@ -51,6 +51,7 @@ const apply = (req, res, c) => {
   } else {
     // check mappings
     let resContentType, resStatusCode, resBody
+    let priority = -1
     c.mappings.forEach(m => {
       // method and path matched
       if ((m.req.path === url.pathname &&
@@ -59,9 +60,12 @@ const apply = (req, res, c) => {
         (!m.req.method && m.req.path === url.pathname) ||
         // method matched and path undefined
         (m.req.method && m.req.method.toUpperCase() === req.method && !m.req.path)) {
-        resContentType = m.res.contentType
-        resStatusCode = m.res.statusCode
-        resBody = m.res.body
+        if (!m.priority || m.priority > priority) {
+          priority = m.priority
+          resContentType = m.res.contentType
+          resStatusCode = m.res.statusCode
+          resBody = m.res.body
+        }
       }
     })
     if (resContentType || resStatusCode || resBody) {

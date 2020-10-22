@@ -66,12 +66,16 @@ a message `success` is returned which `content-type` is `text/plain`.
 "success"
 ```
 
-When  request to `http://<server>:9998/bar` with any method, 
-a json response is returned which `content-type` is `application/json`.
+When  request to `http://<server>:9998/bar` with `PUT` method, 
+a response is returned which `content-type` is `text/plain`.
+If request `/bar` with other methods, a json response is returned which is set bigger priority number.
 
 ```
 ᐅ curl -X 'PUT' http://localhost:9998/bar
-{"response":"/bar accessed."}
+"PUT /bar requested."
+
+ᐅ curl -X 'GET' http://localhost:9998/bar
+{"response": "/bar accessed."}
 ```
 
 When access to ssl `https://<server>:9999`, 
@@ -135,24 +139,25 @@ The priority is following order
 
 The Config properties detail is following.
 
-| property                     | desc                                                                                                       |
-| :--------------------------- | :--------------------------------------------------------------------------------------------------------- |
-| **name**                     | server app name (default is `haribote-server`)                                                             |
-| **port**                     | server listening port (mandatory)                                                                          |
-| **defaultStatusCode**        | default response HTTP status code. If undefined, `200` is set as default value.                            |
-| **defaultContentType**       | default response `Content-Type`. If undefined, `text/plain` is set as default value.                       |
-| **defaultResBody**           | default response body. If undefined, `request header` is set as default value.                             |
-| **mappings**                 | set request and response conditions                                                                        |
-| **mappings.req**             | request condition (If mappings defined, this is mandatory.)                                                |
-| **mappings.req.method**      | request method condition (e.g. "GET", "POST", "PUT",...). If `req.path` is not defined, this is mandatory. |
-| **mappings.req.path**        | request url pathname (e.g. "/foo"). If `req.method` is not defined, this is mandatory.                     |
-| **mappings.res**             | response condition (If mappings defined, this is mandatory.)                                               |
-| **mappings.res.statusCode**  | response HTTP status code. If request condition matched, this code is applied.                             |
-| **mappings.res.contentType** | response HTTP `Content-Type`. If request condition matched, this Content-Type is applied.                  |
-| **mappings.res.body**        | responses body. If request condition matched, this body is applied.                                        |
-| **tls**                      | tls settings (Only needed for https)                                                                       |
-| **tls.key**                  | tls keyfile path                                                                                           |
-| **tls.cert**                 | tls certfile path                                                                                          |
+| property                     | desc                                                                                                                   |
+| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------- |
+| **name**                     | server app name (default is `haribote-server`)                                                                         |
+| **port**                     | server listening port (mandatory)                                                                                      |
+| **defaultStatusCode**        | default response HTTP status code. If undefined, `200` is set as default value.                                        |
+| **defaultContentType**       | default response `Content-Type`. If undefined, `text/plain` is set as default value.                                   |
+| **defaultResBody**           | default response body. If undefined, `request header` is set as default value.                                         |
+| **mappings**                 | set request and response conditions                                                                                    |
+| **mappings.priority**        | routing priority. If request condition matches multiple mappings, the mapping which has the biggest number is applied. |
+| **mappings.req**             | request condition (If mappings defined, this is mandatory.)                                                            |
+| **mappings.req.method**      | request method condition (e.g. "GET", "POST", "PUT",...). If `req.path` is not defined, this is mandatory.             |
+| **mappings.req.path**        | request url pathname (e.g. "/foo"). If `req.method` is not defined, this is mandatory.                                 |
+| **mappings.res**             | response condition (If mappings defined, this is mandatory.)                                                           |
+| **mappings.res.statusCode**  | response HTTP status code. If request condition matched, this code is applied.                                         |
+| **mappings.res.contentType** | response HTTP `Content-Type`. If request condition matched, this Content-Type is applied.                              |
+| **mappings.res.body**        | responses body. If request condition matched, this body is applied.                                                    |
+| **tls**                      | tls settings (Only needed for https)                                                                                   |
+| **tls.key**                  | tls keyfile path                                                                                                       |
+| **tls.cert**                 | tls certfile path                                                                                                      |
 
 
 You can specify JSON Array format.
@@ -185,6 +190,7 @@ Default example config is below.
         }
       },
       {
+        "priority": 2,
         "req": {
           "path": "/bar"
         },
@@ -194,6 +200,18 @@ Default example config is below.
           "body": {
             "response": "/bar accessed."
           }
+        }
+      },
+      {
+        "priority": 1,
+        "req": {
+          "path": "/bar",
+          "method": "PUT"
+        },
+        "res": {
+          "statusCode": 200,
+          "contentType": "text/plain",
+          "body": "PUT /bar requested."
         }
       },
       {
