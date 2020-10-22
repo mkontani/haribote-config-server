@@ -24,7 +24,7 @@
         }
       },
       {
-        "priority": 2,
+        "priority": 1,
         "req": {
           "path": "/bar"
         },
@@ -37,7 +37,7 @@
         }
       },
       {
-        "priority": 1,
+        "priority": 2,
         "req": {
           "method": "PUT",
           "path": "/bar"
@@ -50,14 +50,13 @@
       },
       {
         "req": {
-          "method": "OPTIONS"
+          "method": "*",
+          "path": "/wild/card/*"
         },
         "res": {
-          "statusCode": 204,
-          "contentType": "application/json",
-          "body": {
-            "result": "OK"
-          }
+          "statusCode": 200,
+          "contentType": "text/plain",
+          "body": "wildcard method and path used."
         }
       }
     ]
