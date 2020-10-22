@@ -154,6 +154,7 @@ The Config properties detail is following.
 | **tls.key**                  | tls keyfile path                                                                                           |
 | **tls.cert**                 | tls certfile path                                                                                          |
 
+
 You can specify JSON Array format.
 Default example config is below.
 
