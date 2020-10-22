@@ -50,7 +50,8 @@ const apply = (req, res, c) => {
     return
   } else {
     // check mappings
-    let resContentType, resStatusCode, resBody, priority = -1
+    let resContentType, resStatusCode, resBody
+    let priority = -1
     c.mappings.forEach(m => {
       // method and path matched
       if ((m.req.path === url.pathname &&
