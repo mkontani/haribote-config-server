@@ -135,21 +135,25 @@ The priority is following order
 
 The Config properties detail is following.
 
-| property                     | desc                                                                                                                                           |
-| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
-| **name**                     | server app name (default is `haribote-server`)                                                                                                 |
-| **port**                     | server listening port (mandatory)                                                                                                              |
-| **mappings**                 | set request and response conditions                                                                                                            |
-| **mappings.req**             | request condition (If mappings defined, this is mandatory.)                                                                                    |
-| **mappings.req.method**      | request method condition (e.g. "GET", "POST", "PUT",...). If `req.path` is not defined, this is mandatory.                                     |
-| **mappings.req.path**        | request url pathname (e.g. "/foo"). If `req.method` is not defined, this is mandatory.                                                         |
-| **mappings.res**             | response condition (If mappings defined, this is mandatory.)                                                                                   |
-| **mappings.res.statusCode**  | response HTTP status code (If mappings is not defined, default is `200`, otherwise `404`). If request condition matched, this code is applied. |
-| **mappings.res.contentType** | response HTTP `Content-Type` (default is `text/plain`). If request condition matched, this Content-Type is applied.                            |
-| **mappings.res.body**        | responses body (default is request header). If request condition matched, this body is applied.                                                |
-| **tls**                      | tls settings (Only needed for https)                                                                                                           |
-| **tls.key**                  | tls keyfile path                                                                                                                               |
-| **tls.cert**                 | tls certfile path                                                                                                                              |
+| property                     | desc                                                                                                       |
+| :--------------------------- | :--------------------------------------------------------------------------------------------------------- |
+| **name**                     | server app name (default is `haribote-server`)                                                             |
+| **port**                     | server listening port (mandatory)                                                                          |
+| **defaultStatusCode**        | default response HTTP status code. If undefined, `200` is set as default value.                            |
+| **defaultContentType**       | default response `Content-Type`. If undefined, `text/plain` is set as default value.                       |
+| **defaultResBody**           | default response body. If undefined, `request header` is set as default value.                             |
+| **mappings**                 | set request and response conditions                                                                        |
+| **mappings.req**             | request condition (If mappings defined, this is mandatory.)                                                |
+| **mappings.req.method**      | request method condition (e.g. "GET", "POST", "PUT",...). If `req.path` is not defined, this is mandatory. |
+| **mappings.req.path**        | request url pathname (e.g. "/foo"). If `req.method` is not defined, this is mandatory.                     |
+| **mappings.res**             | response condition (If mappings defined, this is mandatory.)                                               |
+| **mappings.res.statusCode**  | response HTTP status code. If request condition matched, this code is applied.                             |
+| **mappings.res.contentType** | response HTTP `Content-Type`. If request condition matched, this Content-Type is applied.                  |
+| **mappings.res.body**        | responses body. If request condition matched, this body is applied.                                        |
+| **tls**                      | tls settings (Only needed for https)                                                                       |
+| **tls.key**                  | tls keyfile path                                                                                           |
+| **tls.cert**                 | tls certfile path                                                                                          |
+
 
 You can specify JSON Array format.
 Default example config is below.
@@ -163,6 +167,11 @@ Default example config is below.
   {
     "name": "various routing example"
     "port": 9998,
+    "defaultStatusCode": 404,
+    "defaultContentType": "application/json",
+    "defaultResBody": {
+      "message": "This is default response."
+    },
     "mappings": [
       {
         "req": {
