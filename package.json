@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "lint": "standard && eslint --debug .",
-    "lint-fix": "standard --fix"
+    "lint-fix": "standard --fix",
+    "test": "nyc mocha"
   },
   "bin": {
     "haribote-config-server": "./app.js"
@@ -30,6 +31,9 @@
   "homepage": "https://github.com/mkontani/haribote-config-server#readme",
   "devDependencies": {
     "eslint": "^6.8.0",
+    "mocha": "^8.2.0",
+    "nyc": "^15.1.0",
+    "rewire": "^5.0.0",
     "standard": "^14.3.4"
   }
 }
