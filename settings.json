@@ -51,12 +51,22 @@
       {
         "req": {
           "method": "*",
-          "path": "/wild/card/*"
+          "path": "/wild/card1/v*/foo"
         },
         "res": {
           "statusCode": 200,
           "contentType": "text/plain",
-          "body": "wildcard method and path used."
+          "body": "single wildcard path used."
+        }
+      },
+      {
+        "req": {
+          "path": "/wild/**end"
+        },
+        "res": {
+          "statusCode": 200,
+          "contentType": "text/plain",
+          "body": "deep wildcard path used."
         }
       }
     ]

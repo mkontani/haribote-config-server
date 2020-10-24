@@ -7,7 +7,7 @@
 
 For each server, all you do is defining request routing and corresponding to response like [default example](./settings.json).
 
-You can easily up multi server processes by just editing config file.
+You can easily up multi server processes with flexible routing by just editing config file.
 
 - [haribote-config-server](#haribote-config-server)
   - [Usage](#usage)
@@ -139,25 +139,25 @@ The priority is following order
 
 The Config properties detail is following.
 
-| property                     | desc                                                                                                                                                      |
-| :--------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **name**                     | server app name (default is `haribote-server`)                                                                                                            |
-| **port**                     | server listening port (mandatory)                                                                                                                         |
-| **defaultStatusCode**        | default response HTTP status code. If undefined, `200` is set as default value.                                                                           |
-| **defaultContentType**       | default response `Content-Type`. If undefined, `text/plain` is set as default value.                                                                      |
-| **defaultResBody**           | default response body. If undefined, `request header` is set as default value.                                                                            |
-| **mappings**                 | set request and response conditions                                                                                                                       |
-| **mappings.priority**        | routing priority. If request condition matches multiple mappings, the mapping which has the biggest number is applied.                                    |
-| **mappings.req**             | request condition (If mappings defined, this is mandatory.)                                                                                               |
-| **mappings.req.method**      | request method condition (e.g. "GET", "POST", "PUT",...). If `req.path` is not defined, this is mandatory. This supports wildcard (all methods) with `*`. |
-| **mappings.req.path**        | request url pathname (e.g. "/foo"). If `req.method` is not defined, this is mandatory. This supports simple prefix match with `*`.(e.g. "/wild/card/*").  |
-| **mappings.res**             | response condition (If mappings defined, this is mandatory.)                                                                                              |
-| **mappings.res.statusCode**  | response HTTP status code. If request condition matched, this code is applied.                                                                            |
-| **mappings.res.contentType** | response HTTP `Content-Type`. If request condition matched, this Content-Type is applied.                                                                 |
-| **mappings.res.body**        | responses body. If request condition matched, this body is applied.                                                                                       |
-| **tls**                      | tls settings (Only needed for https)                                                                                                                      |
-| **tls.key**                  | tls keyfile path                                                                                                                                          |
-| **tls.cert**                 | tls certfile path                                                                                                                                         |
+| property                     | desc                                                                                                                                                                                                                                                                                                                      |
+| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **name**                     | server app name (default is `haribote-server`)                                                                                                                                                                                                                                                                            |
+| **port**                     | server listening port (mandatory)                                                                                                                                                                                                                                                                                         |
+| **defaultStatusCode**        | default response HTTP status code. If undefined, `200` is set as default value.                                                                                                                                                                                                                                           |
+| **defaultContentType**       | default response `Content-Type`. If undefined, `text/plain` is set as default value.                                                                                                                                                                                                                                      |
+| **defaultResBody**           | default response body. If undefined, `request header` is set as default value.                                                                                                                                                                                                                                            |
+| **mappings**                 | set request and response conditions                                                                                                                                                                                                                                                                                       |
+| **mappings.priority**        | routing priority. If request condition matches multiple mappings, the mapping which has the biggest number is applied.                                                                                                                                                                                                    |
+| **mappings.req**             | request condition (If mappings defined, this is mandatory.)                                                                                                                                                                                                                                                               |
+| **mappings.req.method**      | request method condition (e.g. "GET", "POST", "PUT",...). If `req.path` is not defined, this is mandatory. This supports wildcard (all methods) with `*`.                                                                                                                                                                 |
+| **mappings.req.path**        | request url pathname (e.g. "/foo"). If `req.method` is not defined, this is mandatory. This supports wildcard with single "`*`" which matches any character except "`/`"(e.g. "`wild*`" matches "`wildcard`") and deep "`**`" which matches any character include "`/`"(e.g. "`/wild/**end`" matches "`/wild/card/end`"). |
+| **mappings.res**             | response condition (If mappings defined, this is mandatory.)                                                                                                                                                                                                                                                              |
+| **mappings.res.statusCode**  | response HTTP status code. If request condition matched, this code is applied.                                                                                                                                                                                                                                            |
+| **mappings.res.contentType** | response HTTP `Content-Type`. If request condition matched, this Content-Type is applied.                                                                                                                                                                                                                                 |
+| **mappings.res.body**        | responses body. If request condition matched, this body is applied.                                                                                                                                                                                                                                                       |
+| **tls**                      | tls settings (Only needed for https)                                                                                                                                                                                                                                                                                      |
+| **tls.key**                  | tls keyfile path                                                                                                                                                                                                                                                                                                          |
+| **tls.cert**                 | tls certfile path                                                                                                                                                                                                                                                                                                         |
 
 
 You can specify JSON Array format.
@@ -216,13 +216,22 @@ Default example config is below.
       },
       {
         "req": {
-          "method": "*",
-          "path": "/wild/card/*"
+          "path": "/wild/v*/foo"
         },
         "res": {
           "statusCode": 200,
           "contentType": "text/plain",
-          "body": "wildcard method and path used."
+          "body": "single wildcard path used."
+        }
+      },
+      {
+        "req": {
+          "path": "/wild/**end"
+        },
+        "res": {
+          "statusCode": 200,
+          "contentType": "text/plain",
+          "body": "deep wildcard path used."
         }
       }
     ]
