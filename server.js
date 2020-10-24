@@ -82,9 +82,27 @@ const apply = (req, res, c) => {
 }
 
 const isPathMatch = (m, r) => {
-  if (!m) return false // path undefined
-  if (m.indexOf('*') === -1) return m === r // if wildcard not used, exactly match
-  return r.startsWith(m.split('*')[0]) // simple prefix match
+  // path undefined
+  if (!m) return false
+  // if wildcard not used, exactly match
+  else if (m.indexOf('*') === -1) return m === r
+  // if deep wildcard used, check with full path
+  else if (m.indexOf('**') > -1) {
+    const mm = m.split('**')
+    return r.startsWith(mm[0]) && r.endsWith(mm[1])
+  } else {
+    // if single wildcard used, check with per layer
+    const ms = m.split('/')
+    const rs = r.split('/')
+    if (ms.length !== rs.length) return false
+    let idx = -1
+    return rs.every(rso => {
+      idx++ // 0,1,...
+      if (ms[idx].indexOf('*') === -1) return ms[idx] === rso
+      const msm = ms[idx].split('*')
+      return rso.startsWith(msm[0]) && rso.endsWith(msm[1])
+    })
+  }
 }
 
 const isMethodMatch = (m, r) => {
