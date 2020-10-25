@@ -8,7 +8,7 @@ const isPathMatch = server.__get__('isPathMatch')
 const isMethodMatch = server.__get__('isMethodMatch')
 
 describe('apply function', () => {
-  let reqMock = {
+  const reqMock = {
     url: 'test.host/foo/bar',
     protocol: 'http',
     method: 'GET',
@@ -17,7 +17,7 @@ describe('apply function', () => {
       host: 'test.host'
     }
   }
-  let resMock = {
+  const resMock = {
     statusCode: undefined,
     contentType: undefined,
     body: undefined,
@@ -33,13 +33,13 @@ describe('apply function', () => {
     resMock.statusCode = undefined
     resMock.contentTypen = undefined
     resMock.body = undefined
-  });
+  })
   it('undefined mapping case', () => {
     apply(reqMock, resMock, { name: 'test', port: 9999 })
     assert.strictEqual(resMock.statusCode, 200)
     assert.strictEqual(resMock.contentType, 'text/plain')
     assert.strictEqual(resMock.body, JSON.stringify(reqMock.headers))
-  });
+  })
   it('undefined mapping case - defaultSettings', () => {
     apply(reqMock, resMock,
       {
@@ -52,7 +52,7 @@ describe('apply function', () => {
     assert.strictEqual(resMock.statusCode, 201)
     assert.strictEqual(resMock.contentType, 'application/json')
     assert.strictEqual(resMock.body, JSON.stringify({ res: 'ok' }))
-  });
+  })
   it('has mapping, req priority case', () => {
     apply(reqMock, resMock,
       {
@@ -62,7 +62,7 @@ describe('apply function', () => {
           {
             priority: 1,
             req: {
-              method: "GET"
+              method: 'GET'
             },
             res: {
               contentType: 'notapply',
@@ -73,7 +73,7 @@ describe('apply function', () => {
           {
             priority: 3,
             req: {
-              method: "GET"
+              method: 'GET'
             },
             res: {
               contentType: 'apply',
@@ -84,7 +84,7 @@ describe('apply function', () => {
           {
             priority: 2,
             req: {
-              method: "GET"
+              method: 'GET'
             },
             res: {
               contentType: 'notapply',
@@ -97,7 +97,7 @@ describe('apply function', () => {
     assert.strictEqual(resMock.statusCode, 202)
     assert.strictEqual(resMock.contentType, 'apply')
     assert.strictEqual(resMock.body, '"bbb"')
-  });
+  })
   it('has mapping, req undefined case', () => {
     apply(reqMock, resMock,
       {
@@ -106,7 +106,7 @@ describe('apply function', () => {
         mappings: [
           {
             req: {
-              method: "POST"
+              method: 'POST'
             },
             res: {
               contentType: 'notapply',
@@ -119,8 +119,8 @@ describe('apply function', () => {
     assert.strictEqual(resMock.statusCode, 200)
     assert.strictEqual(resMock.contentType, 'text/plain')
     assert.strictEqual(resMock.body, JSON.stringify(reqMock.headers))
-  });
-});
+  })
+})
 
 describe('isPathMatch function', () => {
   it('path undefined case', () => {
