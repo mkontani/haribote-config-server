@@ -3,8 +3,124 @@ const assert = require('assert')
 const rewire = require('rewire')
 const server = rewire('../server')
 
+const apply = server.__get__('apply')
 const isPathMatch = server.__get__('isPathMatch')
 const isMethodMatch = server.__get__('isMethodMatch')
+
+describe('apply function', () => {
+  const reqMock = {
+    url: 'test.host/foo/bar',
+    protocol: 'http',
+    method: 'GET',
+    headers: {
+      haribote_name: undefined,
+      host: 'test.host'
+    }
+  }
+  const resMock = {
+    statusCode: undefined,
+    contentType: undefined,
+    body: undefined,
+    setHeader: function (_, v) {
+      this.contentType = v
+    },
+    end: function (params) {
+      this.body = params
+    }
+  }
+  beforeEach(() => {
+    reqMock.headers.haribote_name = undefined
+    resMock.statusCode = undefined
+    resMock.contentTypen = undefined
+    resMock.body = undefined
+  })
+  it('undefined mapping case', () => {
+    apply(reqMock, resMock, { name: 'test', port: 9999 })
+    assert.strictEqual(resMock.statusCode, 200)
+    assert.strictEqual(resMock.contentType, 'text/plain')
+    assert.strictEqual(resMock.body, JSON.stringify(reqMock.headers))
+  })
+  it('undefined mapping case - defaultSettings', () => {
+    apply(reqMock, resMock,
+      {
+        name: 'test',
+        port: 9999,
+        defaultStatusCode: 201,
+        defaultContentType: 'application/json',
+        defaultResBody: { res: 'ok' }
+      })
+    assert.strictEqual(resMock.statusCode, 201)
+    assert.strictEqual(resMock.contentType, 'application/json')
+    assert.strictEqual(resMock.body, JSON.stringify({ res: 'ok' }))
+  })
+  it('has mapping, req priority case', () => {
+    apply(reqMock, resMock,
+      {
+        name: 'test',
+        port: 9999,
+        mappings: [
+          {
+            priority: 1,
+            req: {
+              method: 'GET'
+            },
+            res: {
+              contentType: 'notapply',
+              statusCode: 201,
+              body: 'aaa'
+            }
+          },
+          {
+            priority: 3,
+            req: {
+              method: 'GET'
+            },
+            res: {
+              contentType: 'apply',
+              statusCode: 202,
+              body: 'bbb'
+            }
+          },
+          {
+            priority: 2,
+            req: {
+              method: 'GET'
+            },
+            res: {
+              contentType: 'notapply',
+              statusCode: 203,
+              body: 'ccc'
+            }
+          }
+        ]
+      })
+    assert.strictEqual(resMock.statusCode, 202)
+    assert.strictEqual(resMock.contentType, 'apply')
+    assert.strictEqual(resMock.body, '"bbb"')
+  })
+  it('has mapping, req undefined case', () => {
+    apply(reqMock, resMock,
+      {
+        name: 'test',
+        port: 9999,
+        mappings: [
+          {
+            req: {
+              method: 'POST'
+            },
+            res: {
+              contentType: 'notapply',
+              statusCode: 500,
+              body: 'aaa'
+            }
+          }
+        ]
+      })
+    assert.strictEqual(resMock.statusCode, 200)
+    assert.strictEqual(resMock.contentType, 'text/plain')
+    assert.strictEqual(resMock.body, JSON.stringify(reqMock.headers))
+  })
+})
 
 describe('isPathMatch function', () => {
   it('path undefined case', () => {
