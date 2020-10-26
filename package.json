@@ -7,7 +7,8 @@
     "start": "node app.js",
     "lint": "standard && eslint --debug .",
     "lint-fix": "standard --fix",
-    "test": "nyc mocha"
+    "test": "nyc -r text -r lcov mocha",
+    "coverage": "codecov"
   },
   "bin": {
     "haribote-config-server": "./app.js"
@@ -30,6 +31,7 @@
   },
   "homepage": "https://github.com/mkontani/haribote-config-server#readme",
   "devDependencies": {
+    "codecov": "^3.8.0",
     "eslint": "^6.8.0",
     "mocha": "^8.2.0",
     "nyc": "^15.1.0",
