@@ -2,6 +2,7 @@
 [![Docker](https://github.com/mkontani/haribote-config-server/workflows/Docker/badge.svg)](https://github.com/mkontani/haribote-config-server/actions?query=workflow%3ADocker)
 [![npm](https://img.shields.io/npm/v/haribote-config-server)](https://www.npmjs.com/package/haribote-config-server)
 [![GitHub](https://img.shields.io/github/license/mkontani/haribote-config-server)](https://github.com/mkontani/haribote-config-server/blob/master/LICENSE)
+[![codecov](https://codecov.io/gh/mkontani/haribote-config-server/branch/master/graph/badge.svg?token=WJCXSQXUDR)](https://codecov.io/gh/mkontani/haribote-config-server/)
 
 🏢 Simple light configurable multi process web server without dependencies.
 
