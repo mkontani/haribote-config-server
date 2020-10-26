@@ -12,7 +12,7 @@ env:
   IMAGE_NAME: haribote-config-server
 
 jobs:
-  npm-lint:
+  npm-test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -29,8 +29,10 @@ jobs:
       - run: npm run build --if-present
       - run: npm run lint --debug .
       - run: npm test
-        env:
-          CI: true
+      - name: Upload coverage to codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage/lcov.info
 
   docker-test:
     runs-on: ubuntu-latest
@@ -51,7 +53,7 @@ jobs:
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     # Ensure test job passes before pushing image.
-    needs: [npm-lint, docker-test]
+    needs: [npm-test, docker-test]
 
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
