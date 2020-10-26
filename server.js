@@ -92,8 +92,7 @@ const isPathMatch = (m, r) => {
     return r.startsWith(mm[0]) && r.endsWith(mm[1])
   } else {
     // if single wildcard used, check with per layer
-    const ms = m.split('/')
-    const rs = r.split('/')
+    const ms = m.split('/'); const rs = r.split('/')
     if (ms.length !== rs.length) return false
     let idx = -1
     return rs.every(rso => {
