@@ -1,11 +1,60 @@
 /* eslint-disable no-undef */
+const path = require('path')
 const assert = require('assert')
+const sinon = require('sinon')
+const Up = require('../server')
 const rewire = require('rewire')
 const server = rewire('../server')
+const http = require('http')
+const https = require('https')
 
 const apply = server.__get__('apply')
 const isPathMatch = server.__get__('isPathMatch')
 const isMethodMatch = server.__get__('isMethodMatch')
+
+describe('Up function', () => {
+  it('http/https servers case', () => {
+    const httpStub = sinon.stub(http)
+    const httpsStub = sinon.stub(https)
+    let httpPort, httpsPort
+    httpStub.createServer.callsFake(() => {
+      return {
+        listen: function (port) {
+          httpPort = port
+        },
+        on: function () { }
+      }
+    })
+    httpsStub.createServer.callsFake(() => {
+      return {
+        listen: function (port) {
+          httpsPort = port
+        },
+        on: function () { }
+      }
+    })
+
+    Up([
+      {
+        name: 'http server',
+        port: 9998
+      },
+      {
+        name: 'https server',
+        port: 9999,
+        tls: {
+          cert: path.join(process.cwd(), 'certs/server.crt'),
+          key: path.join(process.cwd(), 'certs/server.key')
+        }
+      }
+    ])
+
+    assert.strictEqual(httpStub.createServer.calledOnce, true)
+    assert.strictEqual(httpPort, 9998)
+    assert.strictEqual(httpsStub.createServer.calledOnce, true)
+    assert.strictEqual(httpsPort, 9999)
+  })
+})
 
 describe('apply function', () => {
   const reqMock = {

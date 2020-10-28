@@ -1,6 +1,6 @@
 {
   "name": "haribote-config-server",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "Simple light configurable multi process web server without dependencies.",
   "main": "server.js",
   "scripts": {
@@ -36,6 +36,7 @@
     "mocha": "^8.2.0",
     "nyc": "^15.1.0",
     "rewire": "^5.0.0",
+    "sinon": "^9.2.1",
     "standard": "^14.3.4"
   }
 }
