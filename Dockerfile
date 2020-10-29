@@ -1,6 +1,6 @@
-FROM node:12-alpine
+FROM node:14-alpine
 
 WORKDIR /app
 COPY . /app/
 
-CMD ["npm", "start"]
+ENTRYPOINT [ "/app/app.js" ]
