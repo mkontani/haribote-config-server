@@ -36,9 +36,6 @@ $ docker build -t haribote .
 # run the haribote server
 $ docker run -p 9997:9997 -p 9998:9998 -p 9999:9999 -v $PWD/settings.json:/app/settings.json:ro  haribote
 
-> haribote-config-server@3.0.1 start /app
-> node app.js
-
 HTTP Server minimal setting example is listening on PORT 9997
 HTTP Server various routing example is listening on PORT 9998
 HTTPS Server TLS example is listening on PORT 9999
