@@ -13,6 +13,8 @@ ARGV Case:
   e.g.) $ haribote-config-server ./settings.json
 ENV Case:
   e.g.) $ HARIBOTE_CONF=./settings.json haribote-config-server
+Docker CLI Case:
+  e.g.) $ docker run -p <host-port>:<container-port> -v $PWD/settings.json:/app/settings.json:ro mkontani/haribote-config-server
   `)
   process.exit(1)
 }

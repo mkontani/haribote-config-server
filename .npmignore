@@ -2,5 +2,6 @@ node_modules
 .gitignore
 coverage
 .nyc_output
+.dockerignore
 test
 Dockerfile
