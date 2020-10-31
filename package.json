@@ -33,10 +33,16 @@
   "devDependencies": {
     "codecov": "^3.8.0",
     "eslint": "^6.8.0",
+    "husky": "^4.3.0",
     "mocha": "^8.2.0",
     "nyc": "^15.1.0",
     "rewire": "^5.0.0",
     "sinon": "^9.2.1",
     "standard": "^14.3.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-fix && git add ."
+    }
   }
 }
