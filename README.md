@@ -1,4 +1,5 @@
 # haribote-config-server
+
 [![Docker](https://github.com/mkontani/haribote-config-server/workflows/Docker/badge.svg)](https://github.com/mkontani/haribote-config-server/actions?query=workflow%3ADocker)
 [![npm](https://img.shields.io/npm/v/haribote-config-server)](https://www.npmjs.com/package/haribote-config-server)
 [![GitHub](https://img.shields.io/github/license/mkontani/haribote-config-server)](https://github.com/mkontani/haribote-config-server/blob/master/LICENSE)
@@ -18,6 +19,17 @@ You can easily up multi server processes with flexible routing by just editing c
   - [Configuration](#configuration)
 
 ## Usage
+
+```
+Usage:
+Specify configfile path by argv or env (HARIBOTE_CONF)
+ARGV Case:
+  e.g.) $ haribote-config-server ./settings.json
+ENV Case:
+  e.g.) $ HARIBOTE_CONF=./settings.json haribote-config-server
+Docker CLI Case:
+  e.g.) $ docker run -p <host-port>:<container-port> -v $PWD/settings.json:/app/settings.json:ro mkontani/haribote-config-server
+```
 
 ### Use as Container
 
