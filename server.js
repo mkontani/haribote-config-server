@@ -59,11 +59,12 @@ const apply = (req, res, c) => {
         (!m.req.method && isPathMatch(m.req.path, url.pathname)) ||
         // method matched and path undefined
         (isMethodMatch(m.req.method, req.method) && !m.req.path)) {
-        if (!m.priority || m.priority > priority) {
+        if (!m.priority) m.priority = 0
+        if (m.priority > priority) {
           resContentType = m.res.contentType
           resStatusCode = m.res.statusCode
           resBody = m.res.body
-          if (m.priority) priority = m.priority
+          priority = m.priority
         }
       }
     })
