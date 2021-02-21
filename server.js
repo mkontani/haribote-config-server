@@ -52,19 +52,19 @@ const apply = (req, res, c) => {
     // check mappings
     let resContentType, resStatusCode, resBody
     let priority = -1
-    c.mappings.some(m => {
+    c.mappings.forEach(m => {
       // method and path matched
       if ((isPathMatch(m.req.path, url.pathname) && isMethodMatch(m.req.method, req.method)) ||
         // path matched and method undefined
         (!m.req.method && isPathMatch(m.req.path, url.pathname)) ||
         // method matched and path undefined
         (isMethodMatch(m.req.method, req.method) && !m.req.path)) {
-        if (!m.priority || m.priority > priority) {
+        if (!m.priority) m.priority = 0
+        if (m.priority > priority) {
           resContentType = m.res.contentType
           resStatusCode = m.res.statusCode
           resBody = m.res.body
-          if (!m.priority) return true
-          else priority = m.priority
+          priority = m.priority
         }
       }
     })
