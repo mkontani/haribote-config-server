@@ -140,6 +140,16 @@ describe('apply function', () => {
               statusCode: 203,
               body: 'ccc'
             }
+          },
+          {
+            req: {
+              method: 'GET'
+            },
+            res: {
+              contentType: 'undefpriority',
+              statusCode: 203,
+              body: 'ddd'
+            }
           }
         ]
       })
