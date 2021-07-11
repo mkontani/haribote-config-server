@@ -37,20 +37,15 @@ const apply = (req, res, c) => {
   // default settings
   req.headers.haribote_name = c.name || 'haribote-server'
   const defaultStatusCode = c.defaultStatusCode || 200
+  const defaultResHeaders = c.defaultResHeaders || {}
   const defaultContentType = c.defaultContentType || 'text/plain'
   const defaultResBody = JSON.stringify(c.defaultResBody) || c.defaultResBody || JSON.stringify(req.headers)
 
   const url = new URL(req.url, `${req.protocol}://${req.headers.host}`)
 
-  // undefined mapping
-  if (!c.mappings) {
-    res.statusCode = defaultStatusCode
-    res.setHeader('content-type', defaultContentType)
-    res.end(defaultResBody)
-    return
-  } else {
+  if (c.mappings) {
     // check mappings
-    let resContentType, resStatusCode, resBody
+    let resContentType, resStatusCode, resHeaders, resBody
     let priority = -1
     c.mappings.forEach(m => {
       // method and path matched
@@ -63,22 +58,29 @@ const apply = (req, res, c) => {
         if (m.priority > priority) {
           resContentType = m.res.contentType
           resStatusCode = m.res.statusCode
+          resHeaders = m.res.headers
           resBody = m.res.body
           priority = m.priority
         }
       }
     })
-    if (resContentType || resStatusCode || resBody) {
+    if (resContentType || resStatusCode || resHeaders || resBody) {
       res.setHeader('content-type', resContentType || defaultContentType)
       res.statusCode = resStatusCode || defaultStatusCode
+      setResHeaders(res, resHeaders || defaultResHeaders)
       res.end(JSON.stringify(resBody) || defaultResBody)
       return
     }
   }
-  // has mapping, but undefined case
+  // mapping undefined case
   res.statusCode = defaultStatusCode
   res.setHeader('content-type', defaultContentType)
+  setResHeaders(res, defaultResHeaders)
   res.end(defaultResBody)
+}
+
+const setResHeaders = (res, h) => {
+  Object.keys(h).forEach(k => res.setHeader(k, h[k]))
 }
 
 const isPathMatch = (m, r) => {
