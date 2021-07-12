@@ -236,7 +236,8 @@ Default example config is below.
           "statusCode": 200,
           "contentType": "text/plain",
           "headers": {
-            "X-TEST-HEADER": "test-header-value"
+            "X-TEST1-HEADER": "test1-header-value",
+            "X-TEST2-HEADER": "test2-header-value"
           },
           "body": "single wildcard path used."
         }
