@@ -21,7 +21,7 @@ You can easily up multi server processes with flexible routing by just editing c
 
 ## Usage
 
-```
+```sh
 Usage:
 Specify configfile path by argv or env (HARIBOTE_CONF)
 ARGV Case:
@@ -36,13 +36,13 @@ Docker CLI Case:
 
 You can run [docker image](https://hub.docker.com/r/mkontani/haribote-config-server) like below.
 
-```
+```sh
 $ docker run --rm -p 9997:9997 -p 9998:9998 -p 9999:9999 mkontani/haribote-config-server
 ```
 
 To start server from this repo, run the following commands.
 
-```:bash
+```sh
 # build image
 $ docker build -t haribote .
 
@@ -59,7 +59,7 @@ By Using [default config](./settings.json), 3 server processes up like above out
 When access to `http://<server>:9997` (`GET`) which is not configured, 
 request headers info is returned like below.
 
-```
+```sh
 ᐅ curl -X 'GET' http://localhost:9997       
 {
   "host": "localhost:9997",
@@ -72,7 +72,7 @@ request headers info is returned like below.
 When `POST` request to `http://<server>:9998/foo`, 
 a message `success` is returned which `content-type` is `text/plain`.
 
-```
+```sh
 ᐅ curl -X 'POST' http://localhost:9998/foo
 "success"
 ```
@@ -81,7 +81,7 @@ When request `http://<server>:9998/bar` with other than `PUT` method, a json res
 If request to `http://<server>:9998/bar` with `PUT` method, 
 a response is returned which `content-type` is `text/plain` which is set bigger priority number.
 
-```
+```sh
 ᐅ curl -X 'GET' http://localhost:9998/bar
 {"response": "/bar accessed."}
 
@@ -99,7 +99,8 @@ You can customize by overwrite config `settings.json`.
 You can use as npm module like below.
 
 With config file case:
-```
+
+```javascript
 // import module
 const serverUP = require('haribote-config-server')
 
@@ -111,7 +112,8 @@ serverUP(config)
 ```
 
 Directly set config object case:
-```
+
+```javascript
 // import module
 const serverUP = require('haribote-config-server')
 
@@ -123,7 +125,7 @@ serverUP([{name: "sample-server", port: 9999}])
 
 You can exec as binary like below.
 
-```
+```sh
 // install binary module
 $ npm install -g haribote-config-server
 
@@ -156,6 +158,7 @@ The Config properties detail is following.
 | **port**                     | server listening port (mandatory)                                                                                                                                                                                                                                                                                         |
 | **defaultStatusCode**        | default response HTTP status code. If undefined, `200` is set as default value.                                                                                                                                                                                                                                           |
 | **defaultContentType**       | default response `Content-Type`. If undefined, `text/plain` is set as default value.                                                                                                                                                                                                                                      |
+| **defaultResHeaders**           | default response headers. If undefined, `request header` is set as default value.                                                                                                                                                                                                                                            |
 | **defaultResBody**           | default response body. If undefined, `request header` is set as default value.                                                                                                                                                                                                                                            |
 | **mappings**                 | set request and response conditions                                                                                                                                                                                                                                                                                       |
 | **mappings.priority**        | routing priority. If request condition matches multiple mappings, the mapping which has the biggest number is applied.                                                                                                                                                                                                    |
@@ -165,16 +168,16 @@ The Config properties detail is following.
 | **mappings.res**             | response condition (If mappings defined, this is mandatory.)                                                                                                                                                                                                                                                              |
 | **mappings.res.statusCode**  | response HTTP status code. If request condition matched, this code is applied.                                                                                                                                                                                                                                            |
 | **mappings.res.contentType** | response HTTP `Content-Type`. If request condition matched, this Content-Type is applied.                                                                                                                                                                                                                                 |
+| **mappings.res.headers**        | responses headers. If request condition matched, this headers are applied.                                                                                                                                                                                                                                                       |
 | **mappings.res.body**        | responses body. If request condition matched, this body is applied.                                                                                                                                                                                                                                                       |
 | **tls**                      | tls settings (Only needed for https)                                                                                                                                                                                                                                                                                      |
 | **tls.key**                  | tls keyfile path                                                                                                                                                                                                                                                                                                          |
 | **tls.cert**                 | tls certfile path                                                                                                                                                                                                                                                                                                         |
 
-
 You can specify JSON Array format.
 Default example config is below.
 
-```
+```json
 [
   {
     "name": "minimal setting example"
@@ -232,6 +235,10 @@ Default example config is below.
         "res": {
           "statusCode": 200,
           "contentType": "text/plain",
+          "headers": {
+            "X-TEST1-HEADER": "test1-header-value",
+            "X-TEST2-HEADER": "test2-header-value"
+          },
           "body": "single wildcard path used."
         }
       },
