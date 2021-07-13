@@ -67,7 +67,7 @@ describe('apply function', () => {
       haribote_name: undefined,
       host: 'test.host'
     },
-    on: function (event, func) {
+    on: function (event) {
       if (event === 'data') this.dataCalled = true
       if (event === 'end') this.endCalled = true
     }
