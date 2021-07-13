@@ -93,10 +93,11 @@ const consoleLogger = (req, res) => {
   req.on('data', chunk => { data += chunk })
   req.on('end', () => {
     console.log('\n-----------------------------\n',
-      'RequestHeaders:\n', req.headers,
-      '\nRequestBody:\n', data,
-      '\nResponseHeaders:\n', res.getHeaders(),
-      '\nResponseBody:\n', res.body)
+      new Date(),
+      '\nRequestHeaders:\n', req.headers,
+      '\n\nRequestBody:\n', data,
+      '\n\nResponseHeaders:\n', res.getHeaders(),
+      '\n\nResponseBody:\n', res.body)
   })
 }
 
