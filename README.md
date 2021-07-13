@@ -181,11 +181,11 @@ Default example config is below.
 ```json
 [
   {
-    "name": "minimal setting example"
+    "name": "minimal setting example",
     "port": 9997
   },
   {
-    "name": "various routing example"
+    "name": "various routing example",
     "port": 9998,
     "defaultStatusCode": 404,
     "defaultContentType": "application/json",
