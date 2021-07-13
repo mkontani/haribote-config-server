@@ -40,6 +40,8 @@ const apply = (req, res, c) => {
   const defaultResHeaders = c.defaultResHeaders || {}
   const defaultContentType = c.defaultContentType || 'text/plain'
   const defaultResBody = JSON.stringify(c.defaultResBody) || c.defaultResBody || JSON.stringify(req.headers)
+  const useLogging = c.useLogging !== false
+  res.body = defaultResBody
 
   const url = new URL(req.url, `${req.protocol}://${req.headers.host}`)
 
@@ -68,7 +70,9 @@ const apply = (req, res, c) => {
       res.setHeader('content-type', resContentType || defaultContentType)
       res.statusCode = resStatusCode || defaultStatusCode
       setResHeaders(res, resHeaders || defaultResHeaders)
-      res.end(JSON.stringify(resBody) || defaultResBody)
+      res.body = JSON.stringify(resBody) || defaultResBody
+      if (useLogging) consoleLogger(req, res)
+      res.end(res.body)
       return
     }
   }
@@ -76,11 +80,24 @@ const apply = (req, res, c) => {
   res.statusCode = defaultStatusCode
   res.setHeader('content-type', defaultContentType)
   setResHeaders(res, defaultResHeaders)
-  res.end(defaultResBody)
+  if (useLogging) consoleLogger(req, res)
+  res.end(res.body)
 }
 
 const setResHeaders = (res, h) => {
   Object.keys(h).forEach(k => res.setHeader(k, h[k]))
+}
+
+const consoleLogger = (req, res) => {
+  let data = ''
+  req.on('data', chunk => { data += chunk })
+  req.on('end', () => {
+    console.log('\n-----------------------------\n',
+      'RequestHeaders:\n', req.headers,
+      '\nRequestBody:\n', data,
+      '\nResponseHeaders:\n', res.getHeaders(),
+      '\nResponseBody:\n', res.body)
+  })
 }
 
 const isPathMatch = (m, r) => {
