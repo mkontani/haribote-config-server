@@ -61,9 +61,15 @@ describe('apply function', () => {
     url: 'test.host/foo/bar',
     protocol: 'http',
     method: 'GET',
+    dataCalled: false,
+    endCalled: false,
     headers: {
       haribote_name: undefined,
       host: 'test.host'
+    },
+    on: function (event) {
+      if (event === 'data') this.dataCalled = true
+      if (event === 'end') this.endCalled = true
     }
   }
   const resMock = {
@@ -79,12 +85,16 @@ describe('apply function', () => {
   }
   beforeEach(() => {
     reqMock.headers.haribote_name = undefined
+    reqMock.dataCalled = false
+    reqMock.endCalled = false
     resMock.statusCode = undefined
-    resMock.contentTypen = undefined
+    resMock.contentType = undefined
     resMock.body = undefined
   })
   it('undefined mapping case', () => {
     apply(reqMock, resMock, { name: 'test', port: 9999 })
+    assert.strictEqual(reqMock.dataCalled, true)
+    assert.strictEqual(reqMock.endCalled, true)
     assert.strictEqual(resMock.statusCode, 200)
     assert.strictEqual(resMock.contentType, 'text/plain')
     assert.strictEqual(resMock.body, JSON.stringify(reqMock.headers))
@@ -98,6 +108,8 @@ describe('apply function', () => {
         defaultContentType: 'application/json',
         defaultResBody: { res: 'ok' }
       })
+    assert.strictEqual(reqMock.dataCalled, true)
+    assert.strictEqual(reqMock.endCalled, true)
     assert.strictEqual(resMock.statusCode, 201)
     assert.strictEqual(resMock.contentType, 'application/json')
     assert.strictEqual(resMock.body, JSON.stringify({ res: 'ok' }))
@@ -153,6 +165,8 @@ describe('apply function', () => {
           }
         ]
       })
+    assert.strictEqual(reqMock.dataCalled, true)
+    assert.strictEqual(reqMock.endCalled, true)
     assert.strictEqual(resMock.statusCode, 202)
     assert.strictEqual(resMock.contentType, 'apply')
     assert.strictEqual(resMock.body, '"bbb"')
@@ -175,9 +189,36 @@ describe('apply function', () => {
           }
         ]
       })
+    assert.strictEqual(reqMock.dataCalled, true)
+    assert.strictEqual(reqMock.endCalled, true)
     assert.strictEqual(resMock.statusCode, 200)
     assert.strictEqual(resMock.contentType, 'text/plain')
     assert.strictEqual(resMock.body, JSON.stringify(reqMock.headers))
+  })
+  it('undefined mapping, useLogging false case', () => {
+    apply(reqMock, resMock, { name: 'test', port: 9999, useLogging: false })
+    assert.strictEqual(reqMock.dataCalled, false)
+    assert.strictEqual(reqMock.endCalled, false)
+  })
+  it('has mapping, useLogging false case', () => {
+    apply(reqMock, resMock,
+      {
+        name: 'test',
+        port: 9999,
+        useLogging: false,
+        mappings: [
+          {
+            req: {
+              method: 'GET'
+            },
+            res: {
+              statusCode: 200
+            }
+          }
+        ]
+      })
+    assert.strictEqual(reqMock.dataCalled, false)
+    assert.strictEqual(reqMock.endCalled, false)
   })
 })
 
