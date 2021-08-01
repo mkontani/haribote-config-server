@@ -45,9 +45,9 @@ const apply = (req, res, c) => {
 
   const url = new URL(req.url, `${req.protocol}://${req.headers.host}`)
 
+  let resContentType, resStatusCode, resHeaders, resBody
   if (c.mappings) {
     // check mappings
-    let resContentType, resStatusCode, resHeaders, resBody
     let priority = -1
     c.mappings.forEach(m => {
       // method and path matched
@@ -66,20 +66,11 @@ const apply = (req, res, c) => {
         }
       }
     })
-    if (resContentType || resStatusCode || resHeaders || resBody) {
-      res.setHeader('content-type', resContentType || defaultContentType)
-      res.statusCode = resStatusCode || defaultStatusCode
-      setResHeaders(res, resHeaders || defaultResHeaders)
-      res.body = JSON.stringify(resBody) || defaultResBody
-      if (useLogging) consoleLogger(req, res)
-      res.end(res.body)
-      return
-    }
   }
-  // mapping undefined case
-  res.statusCode = defaultStatusCode
-  res.setHeader('content-type', defaultContentType)
-  setResHeaders(res, defaultResHeaders)
+  res.setHeader('content-type', resContentType || defaultContentType)
+  res.statusCode = resStatusCode || defaultStatusCode
+  setResHeaders(res, resHeaders || defaultResHeaders)
+  res.body = JSON.stringify(resBody) || defaultResBody
   if (useLogging) consoleLogger(req, res)
   res.end(res.body)
 }
