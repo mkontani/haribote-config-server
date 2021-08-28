@@ -51,6 +51,7 @@ jobs:
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     runs-on: ubuntu-latest
+    if: github.event_name == 'release'
     permissions:
       packages: write
       contents: read
