@@ -1,8 +1,9 @@
 name: Docker
 
 on:
-  release:
-    branches: master
+  push:
+    branches:
+      - master
   # Run tests for any PRs.
   pull_request:
 
@@ -51,7 +52,7 @@ jobs:
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     runs-on: ubuntu-latest
-    if: github.event_name == 'release'
+    if: github.event_name == 'push'
     permissions:
       packages: write
       contents: read
