@@ -29,7 +29,7 @@ ARGV Case:
 ENV Case:
   e.g.) $ HARIBOTE_CONF=./settings.json haribote-config-server
 Docker CLI Case:
-  e.g.) $ docker run -p <host-port>:<container-port> -v $PWD/settings.json:/app/settings.json:ro mkontani/haribote-config-server
+  e.g.) $ docker run --init -p <host-port>:<container-port> -v $PWD/settings.json:/app/settings.json:ro mkontani/haribote-config-server
 ```
 
 ### Use as Container
@@ -37,7 +37,7 @@ Docker CLI Case:
 You can run [docker image](https://hub.docker.com/r/mkontani/haribote-config-server) like below.
 
 ```sh
-$ docker run --rm -p 9997:9997 -p 9998:9998 -p 9999:9999 mkontani/haribote-config-server
+$ docker run --init --rm -p 9997:9997 -p 9998:9998 -p 9999:9999 mkontani/haribote-config-server
 ```
 
 To start server from this repo, run the following commands.
@@ -47,7 +47,7 @@ To start server from this repo, run the following commands.
 $ docker build -t haribote .
 
 # run the haribote server
-$ docker run -p 9997:9997 -p 9998:9998 -p 9999:9999 -v $PWD/settings.json:/app/settings.json:ro  haribote
+$ docker run --init -p 9997:9997 -p 9998:9998 -p 9999:9999 -v $PWD/settings.json:/app/settings.json:ro  haribote
 
 HTTP Server minimal setting example is listening on PORT 9997
 HTTP Server various routing example is listening on PORT 9998
