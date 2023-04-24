@@ -37,7 +37,7 @@
   "devDependencies": {
     "codecov": "^3.8.2",
     "eslint": "^6.8.0",
-    "husky": "^4.3.8",
+    "husky": "^8.0.3",
     "mocha": "^10.1.0",
     "nyc": "^15.1.0",
     "rewire": "^5.0.0",
